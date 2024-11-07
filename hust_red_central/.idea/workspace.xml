@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ed079e11-82f2-4d2e-8270-1bb90b368174" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../TinderFusion_Imp.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../TinderFusion_Imp.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../TinderJudge_Imp.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../TinderJudge_Imp.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../TinderSerialize.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../TinderSerialize.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../config/config.toml" beforeDir="false" afterPath="$PROJECT_DIR$/../../config/config.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../config/node.toml" beforeDir="false" afterPath="$PROJECT_DIR$/../../config/node.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/SupervisorEz/approach_tolocation.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/SupervisorEz/approach_tolocation.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/SupervisorEz/attack_intercept.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/SupervisorEz/attack_intercept.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/SupervisorEz/release_platform.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/SupervisorEz/release_platform.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/SupervisorEz/warhead_status.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/SupervisorEz/warhead_status.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/TacticsEz/composite_testcode.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/TacticsEz/composite_testcode.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/TacticsEz/interact_command_default.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/TacticsEz/interact_command_default.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/TacticsEz/interact_inform_tarlocate.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/TacticsEz/interact_inform_tarlocate.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/TacticsEz/pathway_alongroute.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/TacticsEz/pathway_alongroute.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/TacticsEz/pathway_break_firecontrol.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/TacticsEz/pathway_break_firecontrol.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/TacticsEz/pathway_hanging.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/TacticsEz/pathway_hanging.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/TacticsEz/pathway_leapfrog_aeno.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/TacticsEz/pathway_leapfrog_aeno.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/TacticsEz/pathway_misssile_hit_location.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/TacticsEz/pathway_misssile_hit_location.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/TacticsEz/pathway_misssile_hit_ratio.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/TacticsEz/pathway_misssile_hit_ratio.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/TacticsEz/pathway_misssile_launchup.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/TacticsEz/pathway_misssile_launchup.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/TacticsEz/pathway_misssile_patrol_default.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/TacticsEz/pathway_misssile_patrol_default.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/TacticsEz/pathway_misssile_search_zigzag.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/TacticsEz/pathway_misssile_search_zigzag.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/TacticsEz/pathway_patrol_circular.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/TacticsEz/pathway_patrol_circular.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/TacticsEz/pathway_patrol_playground.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/TacticsEz/pathway_patrol_playground.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/TacticsEz/pathway_topoint.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/TacticsEz/pathway_topoint.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/TacticsEz/release_disruptor_em_default.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/TacticsEz/release_disruptor_em_default.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/TacticsEz/release_platform_default.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/TacticsEz/release_platform_default.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/TacticsEz/search_scan_default.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/TacticsEz/search_scan_default.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/TacticsEz/strike_ascommand.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/TacticsEz/strike_ascommand.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/TacticsEz/strike_autodefence.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/TacticsEz/strike_autodefence.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/TacticsEz/strike_entity_ez.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/TacticsEz/strike_entity_ez.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/TacticsEz/switch_intask_location.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/TacticsEz/switch_intask_location.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/TacticsEz/track_respond_default.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/TacticsEz/track_respond_default.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/TacticsEz/track_targets_default.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/TacticsEz/track_targets_default.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/301010102/301010102_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/301010102/301010102_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/301110101/301110101_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/301110101/301110101_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/301110102/301110102_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/301110102/301110102_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/301110401/301110401_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/301110401/301110401_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/301110401/301110401_1.0.1.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/301110401/301110401_1.0.1.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/301110402/301110402_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/301110402/301110402_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/301110403/301110403_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/301110403/301110403_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/301111101/301111101_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/301111101/301111101_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/301111102/301111102_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/301111102/301111102_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/301111103/301111103_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/301111103/301111103_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/301111201/301111201_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/301111201/301111201_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/301210101/301210101_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/301210101/301210101_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/301210102/301210102_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/301210102/301210102_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/301210301/301210301_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/301210301/301210301_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/301210302/301210302_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/301210302/301210302_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/301210303/301210303_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/301210303/301210303_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/301210304/301210304_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/301210304/301210304_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/301210801/301210801_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/301210801/301210801_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/301210802/301210802_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/301210802/301210802_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/301210803/301210803_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/301210803/301210803_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/301310101/301310101_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/301310101/301310101_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/301430501/301430501_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/301430501/301430501_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/302010101/302010101_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/302010101/302010101_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/302010102/302010102_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/302010102/302010102_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/302010103/302010103_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/302010103/302010103_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/302010104/302010104_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/302010104/302010104_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/302010201/302010201_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/302010201/302010201_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/302010202/302010202_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/302010202/302010202_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/302010301/302010301_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/302010301/302010301_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/302010302/302010302_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/302010302/302010302_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/302010303/302010303_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/302010303/302010303_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/302010601/302010601_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/302010601/302010601_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/302020201/302020201_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/302020201/302020201_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/302020301/302020301_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/302020301/302020301_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/models/302050101/302050101_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/models/302050101/302050101_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/shell/missilee.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/shell/missileez.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/shell/missileez.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/shell/platform_fighter.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/shell/platform_fighter.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/shell/platform_warship.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/shell/platform_warship.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/shell/platformez.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/shell/platformez.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/shell/scatter.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/shell/scatter.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/tactics/10101/10101_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/tactics/10101/10101_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/tactics/10103/10103_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/tactics/10103/10103_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/tactics/10104/10104_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/tactics/10104/10104_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/tactics/10105/10105_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/tactics/10105/10105_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/tactics/10110/10110_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/tactics/10110/10110_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/tactics/10112/10112_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/tactics/10112/10112_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/tactics/10113/10113_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/tactics/10113/10113_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/tactics/10114/10114_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/tactics/10114/10114_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/tactics/10115/10115_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/tactics/10115/10115_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/tactics/10116/10116_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/tactics/10116/10116_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/tactics/10117/10117_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/tactics/10117/10117_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/tactics/10118/10118_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/tactics/10118/10118_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/tactics/10120/10120_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/tactics/10120/10120_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/tactics/10121/10121_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/tactics/10121/10121_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/tactics/10122/10122_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/tactics/10122/10122_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/tactics/10123/10123_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/tactics/10123/10123_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/tactics/10124/10124_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/tactics/10124/10124_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/tactics/10125/10125_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/tactics/10125/10125_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/tactics/10126/10126_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/tactics/10126/10126_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/tactics/10128/10128_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/tactics/10128/10128_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/tactics/10129/10129_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/tactics/10129/10129_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/tactics/10130/10130_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/tactics/10130/10130_1.0.0.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../resources/tactics/10131/10131_1.0.0.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../resources/tactics/10131/10131_1.0.0.dll" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="2ho9TCeQRrodpiMu0O3gsgejW5C" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/projectTL/tinder-run-internal/bin/py/strike_control&quot;
+  }
+}</component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-d68999036c7f-d3b881c8e49f-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-233.14475.56" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ed079e11-82f2-4d2e-8270-1bb90b368174" name="Changes" comment="" />
+      <created>1718249568683</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1718249568683</updated>
+    </task>
+    <servers />
+  </component>
+</project>
