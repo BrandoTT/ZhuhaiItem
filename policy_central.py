@@ -4,6 +4,7 @@ import random
 import math
 # import matplotlib.path as mpath
 import traceback
+import copy
 
 # POC_LOC = [121.12371295, 38.78725701] # 港口坐标
 POC_LOC = [121.11823033, 38.77894595]
@@ -13,12 +14,12 @@ class cmdlist:
     high_blue_speed = 20 # 蓝方最大速度
     high_red_speed = 25 # 20 # 红方最大速度
     red_patrol_area = [
-        77029194,    # !w-3 5号艇 #  3623181337, # 外-1 1号艇 
-        3878154559, # !w-4 4号艇 #  2440587693, # 外-2 3号艇
-        3623181337, # !w-1 1号艇  #  77029194, # 外-3 5号艇
-        2839561766, # !w-6 2号艇 #  3878154559, # 外-4 4号艇
-        2440587693, # !w-2 3号艇 #  4240880764, # 外-5 6号艇
-        4240880764, # !w-5 6号艇  #  2839561766, # 外-6 2号艇
+        77029194,   # !w-1 5号艇 #  3623181337, # 外-1 1号艇 
+        3878154559, # !w-2 4号艇 #  2440587693, # 外-2 3号艇
+        3623181337, # !w-3 1号艇  #  77029194, # 外-3 5号艇
+        2839561766, # !w-4 2号艇 #  3878154559, # 外-4 4号艇
+        2440587693, # !w-5 3号艇 #  4240880764, # 外-5 6号艇
+        4240880764, # !w-6 6号艇  #  2839561766, # 外-6 2号艇
         3739178117, # 内-1 7号艇
         2655040369, # 内-2 8号艇
     ] # 共8个巡逻去区域
@@ -98,6 +99,9 @@ class cmdlist:
         # TinderPy.log_info(f"Recived index: {area_id_index}")
         plan.area_id = cmdlist.red_patrol_area[area_id_index]
 
+        # ! 1101
+        plan.cover_other_plan = True
+
         return plan
 
     @staticmethod
@@ -114,15 +118,41 @@ class cmdlist:
         plan.task_type = task_type # 0108
         plan.targets = [tar for tar in targets]
 
-        TinderPy.log_info(f"planid: {plan_id}, targets: {targets}")
-
         ammo_attr = TinderPy.Attribute()
-        ammo_attr.name = "ammo" 
-        ammo_attr.value = "302050103" # 
+        ammo_attr.name = "ammo"  # 
+        ammo_attr.value = "302050103" # 302050202
 
         amount_attr = TinderPy.Attribute()
         amount_attr.name = "amount"
         amount_attr.value = "2"
+        
+        plan.attributes = [ammo_attr, amount_attr]
+
+        return plan
+
+    @staticmethod
+    def gun_attack(plan_id: int, 
+                plan_name: str, 
+                task_type: str, 
+                targets: list
+    ):
+        """红方艇发射导弹攻击范围以内的敌艇"""
+        plan = TinderPy.PlanInfo()
+        plan.id = random.randint(0, 2**32 - 1)
+        plan.name = plan_name
+        plan.force_id = plan_id  # 执行任务的兵力id
+        plan.task_type = task_type # 0108
+        plan.targets = [tar for tar in targets]
+
+        plan.cover_other_plan = True
+
+        ammo_attr = TinderPy.Attribute()
+        ammo_attr.name = "ammo"  # 
+        ammo_attr.value = "302050202" # 
+
+        amount_attr = TinderPy.Attribute()
+        amount_attr.name = "amount"
+        amount_attr.value = "1000"
         
         plan.attributes = [ammo_attr, amount_attr]
 
@@ -628,6 +658,64 @@ class cmdlist:
             return False
 
         pass
+    
+    @staticmethod
+    def generate_random_point_nearby(points: list, radius: int = 200):
+        """
+        生成一个随机点，位于给定经纬度(lat, lon)周围的指定范围内（单位：米）。
+
+        参数:
+        lat (float): 中心点的纬度
+        lon (float): 中心点的经度
+        radius (float): 随机点生成的半径，单位：米，默认为100米
+
+        返回:
+        tuple: 返回生成的随机点 (lat, lon)
+        """
+        lat = points[1]
+        lon = points[0]
+
+        # 地球半径，单位：米
+        EARTH_RADIUS = 6371000
+
+        # 将米转换为度
+        def distance_to_deg(distance):
+            return distance / (EARTH_RADIUS * math.pi / 180)
+
+        # 随机生成角度
+        angle = random.uniform(0, 2 * math.pi)
+
+        # 计算偏移量
+        delta_lat = distance_to_deg(radius) * math.cos(angle)
+        delta_lon = distance_to_deg(radius) * math.sin(angle) / math.cos(math.radians(lat))
+
+        # 计算新的经纬度
+        lat_new = lat + delta_lat
+        lon_new = lon + delta_lon
+
+        return [lon_new, lat_new]
+
+    # @staticmethod
+    # def if_red_avoid(points_1: list = None, points_2: list = None):
+    #     """红方避让效果判断两个点的连线是否经过岛屿, 模拟避让效果(即需要更换理想目标).
+
+    #     # todo 如果与理想目标之间的连线穿过岛屿, 则重新规划一个路径.
+
+    #     "trade1": [121.27380169, 38.96845602],
+    #     "trade2": [121.16724190, 38.95374014],
+    #     "trade3": [121.08751414, 38.89781016],
+    #     "trade4": [121.11248287, 38.83181382],
+    #     "trade5": [121.15265619, 38.72466319],
+    #     "trade6": [121.29071637, 38.78868264],
+
+    #     """
+    #     import shapely.geometry as geom
+    #     polygon_points = [(38.96845602, 121.27380169), (38.95374014, 121.16724190), (38.89781016, 121.08751414), \
+    #                       (38.83181382, 121.11248287), (38.72466319, 121.15265619), (38.78868264, 121.29071637)]
+    #     polygon = geom.Polygon(polygon_points)
+    #     pass
+    #     pass
+
 
     # @staticmethod
     # # 判断A艇是否在追B艇
@@ -692,7 +780,7 @@ class RedPolicy:
             "10号艇": None,
             "11号艇": None,
             "12号艇": None,
-            "高空探测气球-1": POC_LOC
+            # "系留探测飞艇-1": POC_LOC
         }
         # 记录所有我方实体上上帧，上帧的位置
         self.loc_last = {
@@ -708,7 +796,7 @@ class RedPolicy:
             "10号艇": [None, None],
             "11号艇": [None, None],
             "12号艇": [None, None],
-            "高空探测气球-1": [POC_LOC, POC_LOC]
+            # "系留探测飞艇-1": [POC_LOC, POC_LOC]
         }
         # 记录我方所有实体的当前朝向
         self.heading = {
@@ -764,7 +852,6 @@ class RedPolicy:
             "10号走私艇": [None, None],
 
         }
-
         # 记录所有敌方实体id
         self.enemies_id = {
             "1号走私艇": None,
@@ -778,6 +865,42 @@ class RedPolicy:
             "9号走私艇":  None,
             "10号走私艇": None,
         }
+        # ! 增加红方艇状态记录, 记载红方正在追踪或者正在巡逻(无目标跟踪)
+        # ! [0, "n号艇正在巡逻中或正在前往巡逻途中"] 代表正在巡逻(预定区域), 无目标跟踪;
+        # ! [1, "n号艇正在跟踪n号走私艇"] 代表正在跟踪"n号走私艇"
+        # ! [2, "n号艇正前往目标点"] 代表正在执行前往某点（巡逻中）,到达目标点后,开始执行巡逻任务,即转为0
+        # // [3, "n号艇正在巡逻中或正在前往巡逻途中"] 代表正在执行区域的巡逻任务
+        self.red_records = {
+            "1号艇": None,
+            "2号艇": None,
+            "3号艇": None,
+            "4号艇": None,
+            "5号艇": None,
+            "6号艇": None,
+            "7号艇": None,
+            "8号艇": None,
+            "9号艇":  None,
+            "10号艇": None,
+            "11号艇": None,
+            "12号艇": None,
+        }
+        # ! 记录状态 上帧的记录,如果状态一样的话,就无需发送
+        self.last_red_records = copy.deepcopy(self.red_records) 
+        # ! 记录蓝方的状态
+        self.blue_records = {
+            "1号走私艇": [], # 记载被哪些艇跟踪 ["2号艇", "3号艇"]
+            "2号走私艇": [],
+            "3号走私艇": [],
+            "4号走私艇": [],
+            "5号走私艇": [],
+            "6号走私艇": [],
+            "7号走私艇": [],
+            "8号走私艇": [],
+            "9号走私艇":  [],
+            "10号走私艇": [],
+        }
+        self.last_blue_records = copy.deepcopy(self.blue_records) 
+
         # ? 设置一个ID: Name的字典
         self.ID_NAME = {}
         
@@ -797,6 +920,20 @@ class RedPolicy:
             "10号艇": [0, 0, 16],
             "11号艇": [0, 0, 16],
             "12号艇": [0, 0, 16],
+        }
+        self.shoot_interval_gun = {
+            "1号艇": True,
+            "2号艇": True,
+            "3号艇": True,
+            "4号艇": True,
+            "5号艇": True,
+            "6号艇": True,
+            "7号艇": True,
+            "8号艇": True,
+            "9号艇":  True,
+            "10号艇": True,
+            "11号艇": True,
+            "12号艇": True,
         }
         # 存储红方实体有哪些时间段之后是处于空闲的位置，临时指令只有当frame > free_time的时候才会奏效
         self.red_enetity_free_time = {
@@ -843,6 +980,18 @@ class RedPolicy:
             "10号艇": "6号走私艇",
             "11号艇": "5号走私艇",
             "12号艇": "6号走私艇",
+        }
+        self.follow_count = {
+            "1号走私艇": 0,
+            "2号走私艇": 0,
+            "3号走私艇": 0,
+            "4号走私艇": 0,
+            "5号走私艇": 0,
+            "6号走私艇": 0,
+            "7号走私艇": 0,
+            "8号走私艇": 0,
+            "9号走私艇":  0,
+            "10号走私艇": 0,
         }
         # * 固定任务的标志，跟随多少帧
         self.counter = {
@@ -896,13 +1045,22 @@ class RedPolicy:
         # ? ---------------------------------------------------------------------------------------------------------------------------
         # 巡逻区中心点
         self.partol_center = {
-            "0": [120.76969571, 38.83097758],
-            "1": [121.14575319, 38.54386562],
-            "2": [121.17442289, 39.15322178],
-            "3": [120.87339587, 39.07907658],
-            "4": [121.43682276, 38.62192287],
-            "5": [120.90209349, 38.60757628],
+            "0": [121.18131194, 39.15385110], # [120.76969571, 38.83097758], # 区域-1
+            "1": [120.87651386, 39.08262726], # [121.14575319, 38.54386562], # 区域-2
+            "2": [120.77001763, 38.83510117], # [121.17442289, 39.15322178], # 区域-3
+            "3": [120.90501538, 38.60919472], # [120.87339587, 39.07907658], # 区域-4
+            "4": [121.15515944, 38.54407683], # [121.43682276, 38.62192287], # 区域-5
+            "5": [121.43891145, 38.62678623], # [120.90209349, 38.60757628], # 区域-6
         }
+        # ! 记录每个巡逻区的巡逻艇的数量, 用来约束每个巡逻区的数量不能超过2
+        # self.partol_num = {
+        #     "0": 0, # 区域-1
+        #     "1": 0, # 区域-2 
+        #     "2": 0,
+        #     "3": 0,
+        #     "4": 0,
+        #     "5": 0, 
+        # }
         # # 记录交易点
         # self.trading = {
         #     "trade1": [121.27481187, 38.96847375],
@@ -997,7 +1155,7 @@ class RedPolicy:
                 self.forward_points[f"{red_name}号艇"]["goal"] is None:  # ? 加入当前艇没有在执行临时任务 
             # todo 测试
             # 前驱侦察敌方
-            if self.counter[f"{red_name}"] > 0 and frame % 100 == 0:
+            if self.counter[f"{red_name}"] > 0 and frame % 150 == 0:
                 self.counter[f"{red_name}"] -= 1
                 # ! 先不采用junsheng接口:1)不能紧紧跟随，无法使用微波武器 2）蓝方避让后的效果有点奇怪
                 # if cmdlist.compute_distance(self.loc[f"{red_name}号艇"], self.enemies[self.follow_enemy[f"{red_name}号艇"]]) < 5:
@@ -1021,19 +1179,21 @@ class RedPolicy:
                                                     "0100", 
                                                     [
                                                         # cmdlist.predict_position(self.enemies[self.follow_enemy[f"{red_name}号艇"]], cmdlist.high_blue_speed, self.enemies_heading[self.follow_enemy[f"{red_name}号艇"]])
-                                                        self.enemies[self.follow_enemy[f"{red_name}号艇"]] # , 
+                                                        # self.enemies[self.follow_enemy[f"{red_name}号艇"]] 
+                                                        cmdlist.generate_random_point_nearby(self.enemies[self.follow_enemy[f"{red_name}号艇"]])
                                                         # cmdlist.predict_position(self.enemies[self.follow_enemy[f"{red_name}号艇"]], cmdlist.high_blue_speed, self.enemies_heading[self.follow_enemy[f"{red_name}号艇"]])
                                                     ], 
                                                     str(cmdlist.high_red_speed))
                         
                         TinderPy.log_info(f'蓝方 {self.follow_enemy[f"{red_name}号艇"]} 的实际位置: {self.enemies[self.follow_enemy[f"{red_name}号艇"]]} 红方艇 {red_name} 对其预判位置: {cmdlist.predict_position(self.enemies[self.follow_enemy[f"{red_name}号艇"]], cmdlist.high_blue_speed, self.enemies_heading[self.follow_enemy[f"{red_name}号艇"]])}')
-                        if self.enemy_alive[self.follow_enemy[f'{red_name}号艇']] < 60: # 生命值
-                            TinderPy.log_info(f"打印血量--------蓝方 {self.follow_enemy[f'{red_name}号艇']} 的血量是: {self.enemy_alive[self.follow_enemy[f'{red_name}号艇']]}")
+                        # if self.enemy_alive[self.follow_enemy[f'{red_name}号艇']] < 60: # 生命值
+                        #     TinderPy.log_info(f"打印血量--------蓝方 {self.follow_enemy[f'{red_name}号艇']} 的血量是: {self.enemy_alive[self.follow_enemy[f'{red_name}号艇']]}")
                         TinderPy.conduct(plan)
+                        # ! 记录状态
+                        self.red_records[f"{red_name}号艇"] = [1, self.entities[f"{red_name}号艇"], f"正在跟踪{self.enemies_id[self.follow_enemy[f'{red_name}号艇']]}"]
                     except Exception as e:
                         TinderPy.log_error(f"问题!不能正常跟踪: {e}!!")
 
-    
     def act(self, frame=None, cmd=None) -> TinderPy.PlanInfo:
         """策略执行函数
 
@@ -1045,7 +1205,10 @@ class RedPolicy:
             flag: success(临时指令执行成功), failed(临时指令执行失败), none(当前帧没有临时指令)
 
         """
-        # TinderPy.log_info(f"Cur Frame: {frame}")
+        # self.last_red_records = self.red_records # ! 记录状态 ! 记录上一帧的消息
+        self.follow_count = {key: int(0) for key in self.follow_count} # 初始化现在的跟踪艇数量
+        # ! 清空每个巡逻区的巡逻艇数量, 不应该在这里去掉
+        # self.partol_num = {key: int(0) for key in self.partol_num}
         import json
         if cmd is not None:
             # ! 解析cmd(暂时没有使用)
@@ -1055,36 +1218,39 @@ class RedPolicy:
             data_dict = json.loads(decoded_string)
             TinderPy.log_info(f"order is : {data_dict}")
             cmd = data_dict
-        # if frame == 5:
-        #     cmd = {'commandId': '01', 'army': ['5号艇'], 'armyIds': [709786661], 'targets': None, 'targetIds': None, 'armyNum': None, 'timeLimit': -1, 'startTime': '-1', 'area': ['区域2'], 'areaPoints': [[120.8100890194105, 39.03074106333209, 0.0], [120.90976568310259, 39.14123147602299, 0.0], [120.9382000038197, 39.12577876934403, 0.0], [120.83853537769028, 39.01526936264606, 0.0]], 'equip': None, 'time': 1730813972831}
+
         # 这个敌方用上帝视角代替
         detects_red = TinderPy.get_blue_forces()
         try:
             # 更新敌方位置
             for n, detect in enumerate(detects_red):
-                self.enemy_alive[detect.get_name()] = detect.get_life()
-                # 更新上上帧、上帧的位置信息
-                self.enemies_last[detect.get_name()][0] = self.enemies_last[detect.get_name()][1] 
-                self.enemies_last[detect.get_name()][1] = self.enemies[detect.get_name()]
-                self.enemies[detect.get_name()] = [detect.get_lon(), detect.get_lat()]    
-                self.enemies_heading[detect.get_name()] = detect.get_heading()   
+                if detect.get_name() in self.enemy_alive:
+                    self.enemy_alive[detect.get_name()] = detect.get_life()
+                    # 更新上上帧、上帧的位置信息
+                    self.enemies_last[detect.get_name()][0] = self.enemies_last[detect.get_name()][1] 
+                    self.enemies_last[detect.get_name()][1] = self.enemies[detect.get_name()]
+                    self.enemies[detect.get_name()] = [detect.get_lon(), detect.get_lat()]    
+                    self.enemies_heading[detect.get_name()] = detect.get_heading()   
 
-            flag = None
+            flag = "none"
             if cmd is None:
-                
-                flag = "none"
+                # flag = "none"
+                pass
             if cmd is not None:
-                TinderPy.log_info(f"cmd: {cmd}")
+                TinderPy.log_info(f"Receive cmd: {cmd}")
+            
             # 解析当前态势
             red_all_forces = TinderPy.get_red_forces()
             for r_item in red_all_forces:
-                if r_item.get_name() != "震撼弹":
+                if r_item.get_name() in self.loc:
+                # if r_item.get_name() != "震撼弹-1":
                     self.loc_last[f"{r_item.get_name()}"][0] = self.loc_last[f"{r_item.get_name()}"][1]
                     self.loc_last[f"{r_item.get_name()}"][1] = self.loc[f"{r_item.get_name()}"]
                     self.loc[f"{r_item.get_name()}"] = [r_item.get_lon(), r_item.get_lat()]
                     self.heading[f"{r_item.get_name()}"]= [r_item.get_heading()]
                     # # 减小射击间隔
-                    if r_item.get_name() != "高空探测气球-1":
+                    if r_item.get_name() in self.shoot_interval:
+                    # if r_item.get_name() != "系留探测飞艇-1":
                         try:
                             if self.shoot_interval[f"{r_item.get_name()}"][0]  > 0:
                                 self.shoot_interval[f"{r_item.get_name()}"][0] -= 1
@@ -1312,9 +1478,17 @@ class RedPolicy:
                 TinderPy.log_info(f'此刻有临时指令!!{cmd}')
                 try:
                     result = self.make_cmd(cmd=cmd, frame=frame)
-                    flag = "success" if result else "failed" # !这个地方改一下，把为什么不能成功执行的字段也要返回
+                    flag = result # str(result) # "success" if result else "failed" # !这个地方改一下，把为什么不能成功执行的字段也要返回
                 except Exception as e:
                     TinderPy.log_info(f'问题make_cmd函数不能成功执行, error: {e}, frame: {frame}')
+
+            # todo 测试 增加蓝方艇被跟踪的数量
+            for r_i, loc in self.loc.items():
+                if self.follow_enemy[r_i] is not None:
+                    self.follow_count[self.follow_enemy[r_i]] += 1
+                else:
+                    if self.check_task[r_i] is not None:
+                        self.follow_count[self.check_task[r_i]] += 1
 
             # ! 临时指令 --- 查证目标
             for name, value in self.check_task.items(): # 临时查证某个目标任务
@@ -1324,9 +1498,14 @@ class RedPolicy:
                         plan = cmdlist.course_maneuver(self.entities[name], 
                                                     f"红方{name}执行临时侦察任务, 侦察{value}.", 
                                                     "0100", 
-                                                    [self.enemies[value]], 
+                                                    [
+                                                        # self.enemies[value]
+                                                        cmdlist.generate_random_point_nearby(self.enemies[value])
+                                                    ], 
                                                     str(cmdlist.high_red_speed))
                         TinderPy.conduct(plan)
+                        # ! 记录状态, red name 跟踪 blue value
+                        self.red_records[name] = [1, self.entities[name],f"正在跟踪{self.enemies_id[value]}"] # "正在跟踪n号走私艇"
                         TinderPy.log_info(f"此时敌方{value}的位置是: {self.enemies[value]}")
                     else:
                         TinderPy.log_info(f"蓝方{value}已经死亡，不能对齐执行侦察任务!")
@@ -1365,6 +1544,8 @@ class RedPolicy:
                                                         [self.forward_points[red_item]["goal"]], 
                                                         str(cmdlist.high_red_speed))
                                 TinderPy.conduct(plan)
+                                # ! 记录状态 当前艇正在执行前往目标点巡逻的任务
+                                # self.red_records[red_item] = [2, self.entities[red_item],f"正前往目标点{}"] # "n号艇正前往某点巡逻中"
                         
                         elif self.forward_points[red_item]["goal"] is not None and self.forward_points[red_item]["start_partol"]:
                             # TinderPy.log_info(f"红方 {red_item} 到达巡逻点，已经开始巡逻...")
@@ -1381,6 +1562,8 @@ class RedPolicy:
                                                                     str(cmdlist.high_red_speed))
                                         TinderPy.conduct(plan)
                                         TinderPy.log_info(f"{red_item} 正在执行前进巡逻的指令!!!")
+                                        # ! 记录状态
+                                        self.red_records[red_item] = [0, self.entities[red_item], f"正在定点巡逻中"] # ! 目标点巡逻 + 目标点
                                         
                                     except Exception as e:
                                         TinderPy.log_error(f"前往目标点执行巡逻出现问题，不会动!!!!!!")
@@ -1392,7 +1575,6 @@ class RedPolicy:
                                         # 更新新的索引
                                         self.forward_points[red_item]["partol_index"] = (before_index+1) % len(self.forward_points[red_item]["patrol_ara"])
                                         # TinderPy.log_info(f"之前的索引是: {before_index}, 更新的索引是: {self.forward_points[red_item]['partol_index']}")
-                            
                             except Exception as e:
                                 TinderPy.log_info(f"问题: ?????????????????????????????? {e}")
                     
@@ -1400,10 +1582,8 @@ class RedPolicy:
             except Exception as e:
                 TinderPy.log_error(f"执行临时指令, 前往目标点巡逻出现问题: {e}")
 
-
-
             # 根据当前态势做出动作
-            if frame == 1:
+            if frame == 0:
                 # 只有第一帧更新所有实体ID信息
                 for r_item in red_all_forces:
                     self.entities[f'{r_item.get_name()}'] = r_item.get_id()
@@ -1419,18 +1599,24 @@ class RedPolicy:
                                                 self.patrol_lines_s2n_7, 
                                                 str(cmdlist.high_red_speed))
                 TinderPy.conduct(plan)
+                # ! 记录状态
+                self.red_records["7号艇"] = [0, self.entities["7号艇"],f"正在沿航线巡逻"] # [0, "n号艇正在巡逻中或正在前往巡逻途中"] 代表正在执行区域的巡逻任务
                 plan = cmdlist.course_maneuver(self.entities["8号艇"], 
                                                 "红方8号艇开始沿海岸线巡逻", 
                                                 "0100", 
                                                 self.patrol_lines_s2n_8, 
                                                 str(cmdlist.high_red_speed))
-                TinderPy.conduct(plan)    
+                TinderPy.conduct(plan)   
+                # ! 记录状态
+                self.red_records["8号艇"] = [0, self.entities["8号艇"],f"正在沿航线巡逻"]
                 plan = cmdlist.course_maneuver(self.entities["9号艇"], 
                                                 "红方9号艇开始沿海岸线巡逻", 
                                                 "0100", 
                                                 self.patrol_lines_n2s_9, 
                                                 str(cmdlist.high_red_speed))
                 TinderPy.conduct(plan)
+                # ! 记录状态
+                self.red_records["9号艇"] = [0, self.entities["9号艇"], f"正在沿航线巡逻"]
                 
                 # 外围所有的船执行巡逻区任务 0 5 1 3 2 4
                 plan1 = cmdlist.area_patrol(self.entities["1号艇"], "0103", 2) #  0)
@@ -1441,6 +1627,23 @@ class RedPolicy:
                 plan6 = cmdlist.area_patrol(self.entities["6号艇"], "0103", 5) # 4)
                 for pl in [plan1, plan2, plan3, plan4, plan5, plan6]:
                     TinderPy.conduct(pl)
+                
+                # ! 记录状态
+                self.red_records["1号艇"] = [0, self.entities["1号艇"], f"正在区域-{3}巡逻中"]
+                self.red_records["2号艇"] = [0, self.entities["2号艇"], f"正在区域-{4}巡逻中"]
+                self.red_records["3号艇"] = [0, self.entities["3号艇"], f"正在区域-{5}巡逻中"]
+                self.red_records["4号艇"] = [0, self.entities["4号艇"], f"正在区域-{2}巡逻中"]
+                self.red_records["5号艇"] = [0, self.entities["5号艇"], f"正在区域-{1}巡逻中"]
+                self.red_records["6号艇"] = [0, self.entities["6号艇"], f"正在区域-{6}巡逻中"]
+
+                # # ! 更新当前巡逻区艇的数量
+                # self.partol_num[str(0)] += 1
+                # self.partol_num[str(1)] += 1
+                # self.partol_num[str(2)] += 1
+                # self.partol_num[str(3)] += 1
+                # self.partol_num[str(4)] += 1
+                # self.partol_num[str(5)] += 1
+
 
             # ! 7,8,9号艇按照航线进行巡逻，当到达这个航线的最后一个点时(判断距离是否小于500米)，然后执行新的航线
             ## 先查看当前索引
@@ -1536,7 +1739,7 @@ class RedPolicy:
                 
                 # 各艇首次侦察
                 for red_item, id in self.entities.items():
-                    if red_item != "高空探测气球-1":
+                    if red_item != "系留探测飞艇-1":
                         try:
                             if self.check_task[red_item] is None and self.forward_points[red_item]["goal"] is None:
                                 self.first_check(frame=frame, red_name=f"{int(red_item.split('号')[0])}")
@@ -1545,7 +1748,7 @@ class RedPolicy:
                             TinderPy.log_info(f"循环执行first_check, 有问题!!! {red_item}, {e}")
 
                 # todo 巡逻艇的收割逻辑，7,8,9最后,当有艇进入他的探测范围时，那么它的follow目标就立刻设置成那个蓝方艇
-
+                            
                 ## todo 临时指令级别高于一切指令，所有指令执行的时候，要优先判断当前是否有临时指令，尤其是机动指令
                 
                 ## 武器攻击（可以对任何艇进行攻击）
@@ -1553,7 +1756,7 @@ class RedPolicy:
                 # todo 只要角度合适就可以
                 try:
                     for red_item, location in self.loc.items():
-                        if red_item != "高空探测气球-1":
+                        if red_item != "系留探测飞艇-1":
                             for blue_item, cur_loc in self.enemies.items():
                                 if self.enemy_alive[blue_item] > 1: # !蓝方没有死亡，才能攻击它
                                         # 红方和当前的蓝方的距离
@@ -1564,8 +1767,6 @@ class RedPolicy:
                                         # 当前帧
                                         dis = cmdlist.compute_distance(self.enemies[blue_item], self.loc[red_item])
                                         # todo 计算，如果跟敌方是呈追击状态，那么射击距离就是3km；如果是面对面的，那么就是4km发射。
-
-
                                         # * 震撼弹: 最优距离判断 + 射击间隔判断 + 弹药量判断 200 帧间隔
                                         if ((last_dis < lastlast_dis and last_dis < dis and dis < 3.5) or dis < 3.5) and self.shoot_interval[red_item][0] == 0 and \
                                                         self.shoot_interval[red_item][2] >= 2: # # !此时判断弹药量是模拟的
@@ -1582,6 +1783,18 @@ class RedPolicy:
                                             Flag = TinderPy.conduct(plan)
                                             TinderPy.log_info(f"红方 {red_item} 发送两颗震撼弹攻击 >>>>>> {blue_item}, 上一帧距离: {last_dis} km, 上上帧距离: {lastlast_dis} km, 当前距离: {dis} km. Result: {Flag}")
                                         
+                                        else:
+                                            # todo 测试 加入机枪效果
+                                            if dis < 2 and self.shoot_interval_gun[red_item]:
+                                                self.shoot_interval_gun[red_item] = False
+                                                plan = cmdlist.gun_attack(self.entities[red_item], 
+                                                                            "DD打击", 
+                                                                            "0108", 
+                                                                            [self.enemies_id[blue_item]])
+                                                
+                                                Flag = TinderPy.conduct(plan)
+                                                TinderPy.log_info(f"红方 {red_item} 使用机枪攻击 >>> {blue_item}")
+                                            
                                         # 微波武器: 角度判断 + 距离判断 + 射击间隔判断 # // 2000 帧间隔
                                         relative_angle, if_can_shoot_flag = cmdlist.if_can_microwave(self.loc[red_item][0], self.loc[red_item][0], 
                                                                                 self.heading[red_item][0], self.enemies[blue_item][0], self.enemies[blue_item][1]) 
@@ -1601,7 +1814,6 @@ class RedPolicy:
                                                 TinderPy.log_info(f"{blue_item} 被使用微波武器后，血量还有: {self.enemy_alive[blue_item]},{Flag}")
                                             except Exception as e:
                                                 TinderPy.log_error(f"问题 不能正确使用微波武器！！")
-                            
                 except Exception as e:
                     TinderPy.log_error(f"当前艇 {red_item} 在面对 {blue_item} 执行武器攻击指令时出现问题!")
 
@@ -1613,7 +1825,7 @@ class RedPolicy:
                 try:
                     for red_item, follow_enemy in self.follow_enemy.items():
                         if follow_enemy is not None: #  如果艇的跟随不是空 到达港口 + 生命值 < 1 + 
-                            if (self.enemy_alive[follow_enemy] <= 20 or \
+                            if (self.enemy_alive[follow_enemy] <= 5 or \
                                 cmdlist.compute_distance(self.enemies[follow_enemy], self.trading["trade1"]) < 1 or \
                                 cmdlist.compute_distance(self.enemies[follow_enemy], self.trading["trade2"]) < 1 or \
                                 cmdlist.compute_distance(self.enemies[follow_enemy], self.trading["trade3"]) < 1 or \
@@ -1626,6 +1838,9 @@ class RedPolicy:
                                     recent_dis = 9999999999
                                     for blue_item, b_loc in self.enemies.items():
                                         if blue_item != follow_enemy:
+                                            # todo 加一个模块, 当想要跟踪的这个艇，数量不超过2才可以继续判断 (可以通过self.check_task和self.follow_enemy)
+                                            if self.follow_count[blue_item] >= 2:
+                                                continue
                                             # 距离最短 + 敌方还活着 + 只拦截圈内的
                                             # ? if cmdlist.compute_distance(location, b_loc) < recent_dis and  \
                                             if cmdlist.compute_distance(self.loc[red_item], b_loc) < recent_dis and cmdlist.compute_distance(self.loc[red_item], b_loc) < 8 and \
@@ -1648,26 +1863,48 @@ class RedPolicy:
                                         # 如果都不符合条件的话，回到巡逻区去巡逻
                                         self.counter[red_item] = 0
                                         self.follow_enemy[red_item] = None
+                                        # self.check_task[red_item] = None # 侦察敌方的任务没有必要了
                                         # TinderPy.log_info(f"红方 {red_item} 没有最佳跟随目标，返回继续巡逻! - 2")
                                         # 选择一个巡逻区
                                         recent_partol = None
                                         recent_dis = 99999
                                         for p_id, loc in self.partol_center.items():
                                             # ? if cmdlist.compute_distance(location, loc) < recent_dis:
-                                            if cmdlist.compute_distance(self.loc[red_item], loc) < recent_dis:
+                                            if cmdlist.compute_distance(self.loc[red_item], loc) < recent_dis: # ! 加判断条件,并且当前巡逻区的数量不超过2,否则，返回港口待命
+                                                # if self.partol_num[str(p_id)] < 2:
                                                 # ? recent_dis = cmdlist.compute_distance(location, loc)
+                                                # todo 红方避让,当判断与目标区域的连线穿过岛屿时，就会产生避让效果
                                                 recent_dis = cmdlist.compute_distance(self.loc[red_item], loc)
                                                 recent_partol = p_id
-                                        plan = cmdlist.area_patrol(self.entities[red_item], "0103", int(recent_partol))
-                                        TinderPy.conduct(plan)
-                                        TinderPy.log_info(f"红方 {red_item} 没有最佳跟随目标，返回继续巡逻 -- 2 巡逻区是: {int(recent_partol)}!")
-                                    
+                                                # else:
+                                                #     pass
+                                        
+                                        if recent_partol is not None: 
+                                            plan = cmdlist.area_patrol(self.entities[red_item], "0103", int(recent_partol))
+                                            TinderPy.conduct(plan)
+                                            # ! 记录状态
+                                            self.red_records[red_item] = [0, self.entities[red_item], f"正在区域-{int(recent_partol)+1}巡逻中"]
+                                            TinderPy.log_info(f"红方 {red_item} 没有最佳跟随目标，返回继续巡逻 -- 2 巡逻区是: {int(recent_partol)}!")
+                                            # self.partol_num[str(recent_partol)] += 1
+                                            # # ! 要更新蓝方的状态
+                                            # if self.enemy_alive[follow_enemy] <= 5:
+                                            #     # 说明这个蓝方艇已经死亡了
+                                            #     self.blue_records[self.enemy_alive[follow_enemy]] = []
+                                        else: # ! 说明巡逻区最后都已经满了, 舰艇返回港口待命
+                                            # todo 测试 ! 为了防止会产生穿过岛的情况,原地巡逻
+                                            self.forward_points[red_item]["goal"] = self.loc[red_item]
+                                            self.forward_points[red_item]["start_partol"] = True
+                                            self.forward_points[red_item]["patrol_ara"] = cmdlist.get_partol_points(self.forward_points[red_item]["goal"])
+                                            pass
+                                            
+
                                     else:
                                         TinderPy.log_info(f"红方 {red_item} 不继续跟踪目标，成功更换目标 → {recent_avlive_blue}")
                                         # 否则，就改变跟踪对象
                                         self.counter[red_item] = 100000
                                         self.follow_enemy[red_item] = recent_avlive_blue
-
+                                        # ! 记录状态
+                                        self.red_records[red_item] = [1, self.entities[red_item], f"正在跟踪{self.enemies_id[recent_avlive_blue]}"]
                             else:
                                 try:
                                     if frame % 100 == 0:
@@ -1677,6 +1914,8 @@ class RedPolicy:
                                             # ! 加一个，当附近有比目标更近的艇时，也会去更新目标
                                             for blue_item, location in self.enemies.items():
                                                 if blue_item != self.follow_enemy[red_item]:
+                                                    if self.follow_count[blue_item] >= 2:
+                                                        continue
                                                     # ? 条件是不仅要近，还要小于6km才可以, 而且不是同一艘, 而且生命值>1
                                                     if cmdlist.compute_distance(self.loc[red_item], self.enemies[blue_item]) < goal_distance and \
                                                         cmdlist.compute_distance(self.loc[red_item], self.enemies[blue_item]) < 8 and \
@@ -1684,21 +1923,25 @@ class RedPolicy:
                                                             self.enemy_alive[blue_item]>1:
                                                         goal_distance = cmdlist.compute_distance(self.loc[red_item], self.enemies[blue_item])
                                                         cur_goal = blue_item
-                                            
-                                            TinderPy.log_info(f"红方 {red_item} 在追逐蓝方 {follow_enemy} 的过程中,发现更近的目标 → {cur_goal}, 遂更换目标, 当前的目标是: {self.follow_enemy[red_item]}")
-                                            self.follow_enemy[red_item] = cur_goal # ? 更换目标
+                                            # ! 改 1108_22:09
+                                            if self.follow_enemy[red_item] != cur_goal:
+                                                TinderPy.log_info(f"红方 {red_item} 在追逐蓝方 {follow_enemy} 的过程中,发现更近的目标 → {cur_goal}, 遂更换目标, 当前的目标是: {self.follow_enemy[red_item]}")
+                                                self.follow_enemy[red_item] = cur_goal # ? 更换目标
+                                                self.counter[red_item] = 100000
+                                                # ! 记录状态
+                                                self.red_records[red_item] = [1, self.entities[red_item], f"正在跟踪{self.enemies_id[cur_goal]}"]
+
                                             # todo 判断当前听是否在执行临时巡逻的指令，如果是，则清空巡逻指令，更换目标追击
                                             if self.forward_points[red_item]["goal"] is not None:
                                                 self.forward_points[red_item]["goal"] = None
                                                 self.forward_points[red_item]["patrol_ara"] = None 
                                                 self.forward_points[red_item]["start_partol"] = False
                                                 self.forward_points[red_item]["partol_index"] = 0
-
                                             # if cur_goal != self.follow_enemy[red_item]:
                                                 
-                                
                                 except Exception as e:
                                     TinderPy.log_error(f"红方 {red_item} 更换目标出现问题! error: {e}")
+                        
                         else: # 当跟随目标是None时，会分配目标，20km以内并且距离所有的trade都在5km以上并且是活的
                             try:
                                 if frame % 100 == 0: 
@@ -1707,6 +1950,8 @@ class RedPolicy:
                                     new_follow_distance = 9999999999999
                                     check_distance = 20 if red_item == '7号艇' or red_item == '8号艇' or red_item == '9号艇' else 12
                                     for blue_item, location in self.enemies.items():
+                                        if self.follow_count[blue_item] >= 2:
+                                                continue
                                         if cmdlist.compute_distance(self.loc[red_item], self.enemies[blue_item]) < new_follow_distance and \
                                             cmdlist.compute_distance(self.loc[red_item], self.enemies[blue_item]) < check_distance and \
                                             self.enemy_alive[blue_item] > 1 and \
@@ -1724,13 +1969,14 @@ class RedPolicy:
                                         TinderPy.log_info(f"查看 {red_item} 没有跟随艇, 给他加目标 {new_follow_item}")
                                         self.counter[red_item] = 100000
                                         self.follow_enemy[red_item] = new_follow_item
+                                        # ! 记录状态
+                                        self.red_records[red_item] = [1, self.entities[red_item], f"正在跟踪{self.enemies_id[new_follow_item]}"]
 
                             except Exception as e:
                                 TinderPy.log_info(f"没有目标的艇重新选择目标失败!出现问题!")
                                 
                 except Exception as e:
                     TinderPy.log_error(f"红方艇 {red_item} 替换目标失败, 出现问题: {e}")
-
 
                 try:
                     # todo 测试
@@ -1768,11 +2014,17 @@ class RedPolicy:
                                     plan = cmdlist.area_patrol(self.entities[red_item], "0103", int(recent_partol))
                                     TinderPy.log_info(f"红方 {red_item} 超出探测圈, 没有最佳跟随目标，返回继续巡逻, 巡逻区是: {int(recent_partol)}!")
                                     TinderPy.conduct(plan)
+                                    # todo 描述待修改→正在巡逻或正在前往巡逻途中
+                                    # ! 记录状态
+                                    self.red_records[red_item] = [0, self.entities[red_item], f"正在区域-{int(recent_partol)+1}巡逻中"]
+
                                 else:
                                     TinderPy.log_info(f"红方 {red_item} 不继续跟踪目标，成功更换目标 → {recent_avlive_blue}")
                                     # 否则，就改变跟踪对象
                                     self.counter[red_item] = 100000
                                     self.follow_enemy[red_item] = recent_avlive_blue
+                                    # ! 记录状态
+                                    self.red_records[red_item] = [1, self.entities[red_item], f"正在跟踪{self.enemies_id[recent_avlive_blue]}"]
                             
                             except Exception as e:
                                 TinderPy.log_error(f"红方艇 {red_item} 追逐超过红色探测圈, 重新规划任务失败,出现问题, 错误是: {e}")
@@ -1782,9 +2034,73 @@ class RedPolicy:
                     
                     pass
                 pass
+        
         except Exception as e:
             error_message = traceback.format_exc()  # 获取完整的错误信息和行号
             TinderPy.log_info(f"Policy act总函数有问题: {error_message}")
+
+        # # ! 整理蓝方态势，看每个艇被谁跟踪
+        # for r_i, loc in self.loc.items():
+        #     if self.follow_enemy[r_i] is not None:
+        #         self.follow_count[self.follow_enemy[r_i]] += 1
+        #     else:
+        #         if self.check_task[r_i] is not None:
+        #             self.follow_count[self.check_task[r_i]] += 1
+        
+        for bitem, status in self.blue_records.items():
+            newstatus = [] # ! 清空上一帧的记录
+            # 在这个地方加入到达交易点或者是死亡
+            if self.enemy_alive[bitem] <= 5:
+                # 该蓝方艇已经死亡
+                newstatus.append(int(0))
+            elif (cmdlist.compute_distance(self.enemies[bitem], self.trading["trade1"]) < 1 or \
+                                cmdlist.compute_distance(self.enemies[bitem], self.trading["trade2"]) < 1 or \
+                                cmdlist.compute_distance(self.enemies[bitem], self.trading["trade3"]) < 1 or \
+                                cmdlist.compute_distance(self.enemies[bitem], self.trading["trade4"]) < 1 or \
+                                cmdlist.compute_distance(self.enemies[bitem], self.trading["trade5"]) < 1 or \
+                                cmdlist.compute_distance(self.enemies[bitem], self.trading["trade6"]) < 1):
+                # 该蓝方艇已经到达目标交易点
+                newstatus.append(int(1))
+            
+            # 需要更新一个蓝被跟踪状态改变的情况
+
+            else: 
+                for r_i, loc in self.loc.items():
+                    if self.follow_enemy[r_i] is not None and self.follow_enemy[r_i] == bitem:
+                        newstatus.append(r_i)
+                    else:
+                        if self.check_task[r_i] is not None and self.check_task[r_i] == bitem:
+                            newstatus.append(r_i)
+            
+            # 最后添加上蓝方的forceid
+            newstatus.append(self.enemies_id[bitem])
+            # TinderPy.log_info(f"*********已经添加: {newstatus}, {bitem}的id是{self.enemies_id[bitem]}")
+            self.blue_records[bitem] = newstatus
+
+        RETURN_TOTAL = {
+            "flag": None, "red_records": None, "blue_records": None
+        }
+
+        RETURN_TOTAL["flag"] = flag
+
+        if self.red_records != self.last_red_records:
+            # TinderPy.log_info(f"当前帧 {frame} 执行任务发生变化!===== last records: {self.last_red_records['7号艇']} records: {self.red_records['7号艇']}")
+            # return_data = [flag, self.red_records]
+            RETURN_TOTAL["red_records"] = self.red_records
+        else:
+            # TinderPy.log_info(f"当前帧 {frame} 执行任务未发生变化!+++++ last records: {self.last_red_records['7号艇']} records: {self.red_records['7号艇']}")
+            # return_data =  [flag]
+            RETURN_TOTAL["red_records"] = None
+        
+        if self.last_blue_records != self.blue_records:
+            RETURN_TOTAL["blue_records"] = self.blue_records
+        else:
+            pass
+
+        self.last_red_records = copy.deepcopy(self.red_records)
+        self.last_blue_records = copy.deepcopy(self.blue_records)
+
+        return RETURN_TOTAL
 
 
     def make_cmd(self, cmd=None, frame=None):
@@ -1810,9 +2126,10 @@ class RedPolicy:
 
         """
         try:
+            flag = None # 设置初始字符串
             TinderPy.log_info(f'cmd函数接收到的指令是: {cmd}, {cmd["commandId"]}')
             if cmd is None:
-                return None
+                return flag
             else:
                 cmd_id = cmd["commandId"]
                 # ? 40 41 42
@@ -1897,7 +2214,8 @@ class RedPolicy:
                     
                     if len(free_armies) == 0:
                         TinderPy.log_info(f"当前没有实体有空闲时间执行!")
-                        return False # ? 应该不会有这种情况, 当前所有的艇都优先服从临时指令
+                        flag = [False, "下指令的红方艇现均有任务，建议执行其他任务!"] 
+                        return flag # ? 应该不会有这种情况, 当前所有的艇都优先服从临时指令
                     else:
                         for army_name in free_armies:
                             if cmd_id == "00":
@@ -1928,6 +2246,9 @@ class RedPolicy:
                                 TinderPy.log_info(f"Success! 下达指令,让{army_name}前往目标点{point}")
                                 self.check_task[army_name] = None # ? 这个地方把侦察目标的指令设空
                                 # // self.forward_points[army_name]["patrol_ara"] =  这个地方不需要定义区域，因为主函数中会定义
+                                flag = [True,] # "红方艇执行前往目标点巡逻指令成功!"
+                                # self.red_records[army_name] = [0, self.entities[army_name], f"正在巡逻中或正在前往巡逻途中"]
+                                self.red_records[army_name] = [2, self.entities[army_name],f"正前往{cmd['area'][0]}"] # "n号艇正前往某点巡逻中"
 
                             elif cmd_id == "01":
                                 try:
@@ -1950,7 +2271,11 @@ class RedPolicy:
                                     plan = cmdlist.area_patrol(self.entities[army_name], "0103", area) # cmdlist.area_patrol(self.entities["1号艇"], "0103", 0) cmdlist.area_patrol(self.entities["1号艇"], "0103", 2)
                                     TinderPy.conduct(plan)
                                     TinderPy.log_info(f'{army_name}航行指令下达成功!')
-                                    
+                                    flag = [True,] # "红方艇执行前往巡逻区指令成功!"
+                                    self.red_records[army_name] = [0, self.entities[army_name], f"正在区域-{area+1}巡逻中或正在前往区域-{area+1}巡逻途中"]
+                                    # 更新巡逻区数量
+                                    # self.partol_num[str(area)]+=1
+
                                 except Exception as e:
                                     error = traceback.format_exc()
                                     TinderPy.log_info(f"执行航行至巡逻区的指令出现问题! {error}")
@@ -1972,6 +2297,12 @@ class RedPolicy:
                                 """
                                 TinderPy.log_info(f'{army_name}开始执行临时指令--前往侦察走私艇{cmd_id}')
                                 target = cmd["targets"][0] # 传进来的是一个list，因此读取第0个
+                                # todo 测试，如果是跟踪的艇太多，则返回False
+                                enemy_name = self.ID_NAME[str(target)] # 敌方的名字
+                                if self.follow_count[enemy_name] >= 2:
+                                    TinderPy.log_info(f"{army_name}不能执行查证任务, 因为已经有2艘艇在追击蓝方艇: {enemy_name}")
+                                    flag = [False, f"{army_name}不能执行前往查证目标任务, 因为已经有2艘红方艇在追击蓝方艇: {enemy_name}, 建议安排其他任务!"]
+                                    return flag 
                                 self.check_task[army_name] = self.ID_NAME[str(target)]  # ? 现在的target应该是一个ID, 因此这个地方先建立一个ID: name的蓝方艇字典,这里是否为字符串
                                 # self.check_task[army_name] = target
                                 self.forward_points[army_name]["goal"] = None
@@ -1982,12 +2313,19 @@ class RedPolicy:
                                 self.counter[army_name] = 0
                                 self.follow_enemy[army_name] = None
                                 TinderPy.log_info(f"{army_name}下达前往侦察走私艇临时指令成功!")
+                                flag = [True,]
                                 pass
 
                             elif cmd_id == "21":
                                 """保持跟踪监视目标"""
                                 TinderPy.log_info(f'{army_name}开始执行临时指令--前往跟踪目标{cmd_id}')
                                 target = cmd["targets"][0] # 传进来的是一个list，因此读取第0个
+                                # todo 测试，如果是跟踪的艇太多，则返回False
+                                enemy_name = self.ID_NAME[str(target)] # 敌方的名字
+                                if self.follow_count[enemy_name] >= 2:
+                                    TinderPy.log_info(f"{army_name}不能执行跟踪任务, 因为已经有2艘艇在追击蓝方艇: {enemy_name}")
+                                    flag = [False, f"{army_name}不能执行跟踪任务, 因为已经有2艘红方艇在跟踪蓝方艇: {enemy_name}, 建议安排其他任务!"]
+                                    return flag
                                 self.check_task[army_name] = self.ID_NAME[str(target)]
                                 self.forward_points[army_name]["goal"] = None
                                 self.forward_points[army_name]["patrol_ara"] = None 
@@ -1997,6 +2335,7 @@ class RedPolicy:
                                 self.counter[army_name] = 0
                                 self.follow_enemy[army_name] = None
                                 TinderPy.log_info(f"{army_name}下达前往跟踪目标临时指令成功!")
+                                flag = [True,]
                                 pass
                                 
                             elif cmd_id == "22":
@@ -2039,7 +2378,7 @@ class RedPolicy:
                                 except Exception as e:
                                     TinderPy.log_error(f"出现问题: 临时指令不能正确使用微波武器！！")   
 
-            return True
+            return flag
         
         except Exception as e:
             error_message = traceback.format_exc()  # 获取完整的错误信息和行号
@@ -2222,7 +2561,7 @@ class BluePolicy:
 
             red_all_forces = TinderPy.get_red_forces()
             for r_item in red_all_forces:
-                if r_item.get_name() != "高空探测气球-1":
+                if r_item.get_name() != "系留探测飞艇-1":
                     self.enemies[f"{r_item.get_name()}"] = [r_item.get_lon(), r_item.get_lat()]
                     self.enemies_heading[f"{r_item.get_name()}"] = r_item.get_heading()
 
@@ -2403,7 +2742,17 @@ class BluePolicy:
                                         TinderPy.log_info(f"距离我：{en_name}最近的队友是:{recent_entity}, 它的朝向是: {recent_enetity_heading}")
                                         
                                         # 找到这个红方艇在当前艇的方位
-                                        en_angle = cmdlist.calculate_bearing(self.enemies[dangerous_red][1], self.enemies[dangerous_red][0], self.loc[en_name][1], self.loc[en_name][0], self.heading[en_name][0])
+                                        TinderPy.log_info(f"check: {self.enemies[dangerous_red][1]}")
+                                        TinderPy.log_info(f"check: {self.enemies[dangerous_red][0]}")
+                                        TinderPy.log_info(f"check: {self.loc[en_name][1]}")
+                                        TinderPy.log_info(f"check: {self.loc[en_name][0]}")
+                                        TinderPy.log_info(f"check: {self.heading[en_name][0]}")
+                                        en_angle = cmdlist.calculate_bearing(self.enemies[dangerous_red][1], 
+                                                                             self.enemies[dangerous_red][0], 
+                                                                             self.loc[en_name][1], 
+                                                                             self.loc[en_name][0], 
+                                                                             self.heading[en_name][0]
+                                        )
                                         TinderPy.log_info(f"{en_name}探测到了红艇,并找到了最威胁的艇:{dangerous_red},距离是:{dangerous_distance}, 在 {en_name} 哪个角度: {en_angle}")
                                         # todo 避让原则增加, 加判断 1）跟队友避让不同的角度；2）蓝方到达最近交易点的时间要比红方来追它还要快的话，就没有必要躲避了;
                                         escape_angle = cmdlist.calculate_escape_angle(en_angle, self.loc[en_name][1], self.loc[en_name][0], 13, self.heading[en_name][0], self.enemies[dangerous_red][1], self.enemies[dangerous_red][0], self.enemies_heading[dangerous_red], recent_enetity_heading) # ? 后边的参数是判断当前角度是否合理的
@@ -2440,7 +2789,8 @@ class BluePolicy:
                                             self.avoiding[en_name] = 2500
                                             pass
             except Exception as e:
-                TinderPy.log_error(f"检查蓝方艇是否探测到红方时出现问题: {e}")
+                error_message = ''.join(traceback.format_exception(None, e, e.__traceback__))
+                TinderPy.log_error(f"检查蓝方艇是否探测到红方时出现问题: {error_message}")
 
             try:
                 # 1. 挨个检索走私艇的状态，查看它们是否在避让
